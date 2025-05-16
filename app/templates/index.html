@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>LLM Document Assistant</title>
+</head>
+<body>
+    <h1>LLM Document Assistant</h1>
+
+    <form action="/upload" enctype="multipart/form-data" method="post">
+        <p>Загрузите PDF:</p>
+        <input type="file" name="file">
+        <button type="submit">Загрузить</button>
+    </form>
+
+    <form action="/ask" method="post">
+        <p>Введите вопрос:</p>
+        <input type="text" name="question" size="50">
+        <button type="submit">Спросить</button>
+    </form>
+
+    {% if message %}
+        <p style="color: green">{{ message }}</p>
+    {% endif %}
+    {% if error %}
+        <p style="color: red">{{ error }}</p>
+    {% endif %}
+    {% if answer %}
+        <h3>Ответ:</h3>
+        <p>{{ answer }}</p>
+    {% endif %}
+</body>
+</html>

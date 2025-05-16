@@ -1,6 +1,6 @@
 import os
 from typing import List
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 def load_pdf(path: str) -> str:
