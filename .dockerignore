@@ -1,0 +1,36 @@
+Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+*.pyo
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# VS Code settings
+.vscode/
+
+# Logs and dumps
+*.log
+*.pid
+*.sqlite
+*.db
+*.bak
+
+# macOS system files
+.DS_Store
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose*.yml
+
+# Env files
+# .env
+
