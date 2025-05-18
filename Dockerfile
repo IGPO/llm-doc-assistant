@@ -1,15 +1,40 @@
-# Используем официальный Python-образ
-FROM python:3.11
+# -------------------- BUILDER STAGE --------------------
+FROM python:3.12-slim AS builder
 
-# Устанавливаем рабочую директорию внутри контейнера
+# Установка Poetry
+RUN pip install poetry
+
+# Создание рабочей директории
 WORKDIR /app
 
-# Копируем файлы
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Копируем только зависимости для кэширования
+COPY pyproject.toml poetry.lock* ./
 
-# Копируем весь проект
+# Конфигурация Poetry: виртуальное окружение внутри проекта
+RUN poetry config virtualenvs.in-project true \
+    && poetry install --no-root --no-interaction --no-ansi
+
+# Копируем остальной код
 COPY . .
 
-# Указываем команду запуска
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# -------------------- FINAL STAGE --------------------
+FROM python:3.12-slim
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем виртуальное окружение из builder
+COPY --from=builder /app/.venv /opt/venv
+
+# Копируем приложение
+COPY --from=builder /app /app
+
+# Устанавливаем переменные окружения
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Открываем порт
+EXPOSE 8000
+
+# Запуск FastAPI-приложения
+CMD ["uvicorn", "llm_doc_assistant.main:app", "--host", "0.0.0.0", "--port", "8000"]
